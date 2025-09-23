@@ -113,6 +113,27 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    /* Prevent zoom on mobile */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Prevent user zoom */
+    touch-action: manipulation;
+    /* Prevent double-tap zoom */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Allow text selection in form fields */
+  input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 }
 
@@ -241,6 +262,15 @@ input, select, textarea {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Prevent zoom on focus */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Prevent double-tap zoom */
+  touch-action: manipulation;
+  /* Prevent zoom on input focus */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* Mobile-first: Better touch feedback */
@@ -396,6 +426,36 @@ input, select, textarea {
   /* Better spacing for touch */
   .space-y-4 > * + * {
     margin-top: 1rem;
+  }
+}
+
+/* Mobile-first: Prevent zoom completely */
+@media (max-width: 768px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Prevent zoom */
+    touch-action: manipulation;
+  }
+  
+  body {
+    /* Prevent zoom on body */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    touch-action: manipulation;
+    /* Prevent double-tap zoom */
+    -webkit-touch-callout: none;
+  }
+  
+  /* Prevent zoom on all interactive elements */
+  button, input, select, textarea, [role="button"] {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    /* Prevent zoom on focus */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
   }
 }
 
