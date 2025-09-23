@@ -499,7 +499,7 @@ const PastorForm = () => {
                         name="banco_numero"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-unni-text-primary">Banco - Opcional</FormLabel>
+                            <FormLabel className="text-unni-text-primary">Banco - Numero</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="Opcional"
