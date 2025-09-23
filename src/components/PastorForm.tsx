@@ -253,21 +253,23 @@ const PastorForm = () => {
   ];
 
   return (
-    <section id="contato" className="py-20 px-4 bg-unni-navy">
+    <section id="contato" className="py-8 px-4 bg-unni-navy lg:py-20">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Church className="h-8 w-8 text-unni-cyan" />
-            <h2 className="text-3xl md:text-4xl font-bold text-unni-blue-light">
+        {/* Mobile-first: Smaller spacing and text */}
+        <div className="text-center mb-8 lg:mb-12">
+          <div className="flex items-center justify-center gap-2 mb-3 lg:gap-3 lg:mb-4">
+            <Church className="h-6 w-6 text-unni-cyan lg:h-8 lg:w-8" />
+            <h2 className="text-2xl font-bold text-unni-blue-light lg:text-3xl xl:text-4xl">
               Conecte sua Igreja!
             </h2>
           </div>
-          <p className="text-unni-text-secondary text-lg max-w-2xl mx-auto">
+          <p className="text-unni-text-secondary text-base max-w-2xl mx-auto lg:text-lg">
             Preencha o formulário abaixo para realizar seu pedido.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
+        {/* Mobile-first: Single column, then grid on larger screens */}
+        <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start lg:space-y-0">
           <Card className="bg-card/50 backdrop-blur-sm border-border">
             <CardHeader>
               <CardTitle className="text-unni-blue-light">Cadastro da Igreja</CardTitle>
@@ -351,7 +353,8 @@ const PastorForm = () => {
                     )}
                   />
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  {/* Mobile-first: Single column, then grid */}
+                  <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
                     <FormField
                       control={form.control}
                       name="cep"
@@ -472,7 +475,8 @@ const PastorForm = () => {
 
                   <div className="pt-2">
                     <h4 className="text-unni-blue-light font-semibold mb-2">Dados bancários (opcional)</h4>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    {/* Mobile-first: Single column, then grid */}
+                    <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
                       <FormField
                         control={form.control}
                         name="banco"
@@ -565,14 +569,17 @@ const PastorForm = () => {
                     </div>
                   </div>
                   
+                  {/* Mobile-first: Larger button for touch */}
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-unni-cyan to-unni-blue-light text-unni-navy font-semibold hover:shadow-lg hover:shadow-unni-cyan/25 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full h-14 bg-gradient-to-r from-unni-cyan to-unni-blue-light text-unni-navy font-semibold hover:shadow-lg hover:shadow-unni-cyan/25 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed lg:h-12"
                     size="lg"
                   >
-                    <Send className="mr-2 h-4 w-4" />
-                    {isSubmitting ? "Enviando..." : "ENVIAR PEDIDO"}
+                    <Send className="mr-2 h-5 w-5 lg:h-4 lg:w-4" />
+                    <span className="text-base lg:text-sm">
+                      {isSubmitting ? "Enviando..." : "ENVIAR PEDIDO"}
+                    </span>
                   </Button>
 
                   <div className="text-center space-y-2">
@@ -591,36 +598,37 @@ const PastorForm = () => {
             </CardContent>
           </Card>
 
-          <div className="flex flex-col gap-6">
-            <Card className="order-2 bg-card/50 backdrop-blur-sm border-border">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-unni-blue-light mb-4">
+          {/* Mobile-first: Cards stack vertically, then side-by-side on desktop */}
+          <div className="space-y-6 lg:flex lg:flex-col lg:gap-6">
+            <Card className="bg-card/50 backdrop-blur-sm border-border lg:order-2">
+              <CardContent className="p-4 lg:p-6">
+                <h3 className="text-lg font-semibold text-unni-blue-light mb-3 lg:text-xl lg:mb-4">
                   Precisa de ajuda?
                 </h3>
-                <p className="text-unni-text-secondary mb-6">
+                <p className="text-unni-text-secondary mb-4 text-sm lg:text-base lg:mb-6">
                   Entre em contato diretamente conosco via WhatsApp e receba atendimento personalizado.
                 </p>
                 <Button 
                   onClick={handleWhatsAppContact}
-                  className="w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold shadow-lg shadow-emerald-500/30 ring-1 ring-emerald-400/20 focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                  className="w-full h-12 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold shadow-lg shadow-emerald-500/30 ring-1 ring-emerald-400/20 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 lg:h-10"
                   size="lg"
                 >
                   <img 
                     src="/images/pastor-form.png" 
                     alt="WhatsApp" 
-                    className="mr-2 h-5 w-5 object-contain drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]"
+                    className="mr-2 h-5 w-5 object-contain drop-shadow-[0_0_10px_rgba(16,185,129,0.6)] lg:h-4 lg:w-4"
                     decoding="async"
                     referrerPolicy="no-referrer"
                     onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                   />
-                  Falar no WhatsApp
+                  <span className="text-sm lg:text-xs">Falar no WhatsApp</span>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="order-1 bg-gradient-to-r from-unni-cyan/10 to-unni-blue-light/10 backdrop-blur-sm border border-unni-cyan/40 shadow-xl">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-unni-blue-light mb-4">
+            <Card className="bg-gradient-to-r from-unni-cyan/10 to-unni-blue-light/10 backdrop-blur-sm border border-unni-cyan/40 shadow-xl lg:order-1">
+              <CardContent className="p-4 lg:p-6">
+                <h3 className="text-lg font-semibold text-unni-blue-light mb-3 lg:text-xl lg:mb-4">
                   Modelos de equipamento
                 </h3>
                 <ul className="space-y-3 text-unni-text-secondary">
