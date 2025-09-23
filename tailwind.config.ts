@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
@@ -12,10 +13,22 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: '1rem', // Mobile-first: smaller padding
 			screens: {
+				'sm': '640px',
+				'md': '768px',
+				'lg': '1024px',
+				'xl': '1280px',
 				'2xl': '1400px'
 			}
+		},
+		screens: {
+			// Mobile-first breakpoints
+			'sm': '640px',   // Small tablets
+			'md': '768px',  // Tablets
+			'lg': '1024px', // Small laptops
+			'xl': '1280px', // Laptops
+			'2xl': '1536px' // Large screens
 		},
 		extend: {
 			colors: {
@@ -100,5 +113,5 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [tailwindcssAnimate],
 } satisfies Config;
