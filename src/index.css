@@ -188,6 +188,13 @@ html {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    /* Prevent scroll issues */
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    position: fixed !important;
+    z-index: 9999 !important;
+    /* Prevent page scroll when dropdown is open */
+    overscroll-behavior: contain;
   }
   
   [data-radix-select-item] {
@@ -274,10 +281,36 @@ html {
 @supports (-webkit-appearance: none) {
   [data-radix-select-trigger] {
     -webkit-appearance: none;
+    appearance: none;
     border-radius: 6px;
   }
   
   [data-radix-select-item] {
     -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+/* Global fix for select positioning */
+[data-radix-select-content] {
+  /* Ensure proper positioning */
+  transform-origin: var(--radix-select-content-transform-origin);
+  /* Prevent unwanted scrolling */
+  overscroll-behavior: contain;
+  /* Better positioning for mobile */
+  will-change: transform;
+}
+
+/* Fix for very small screens */
+@media (max-width: 360px) {
+  [data-radix-select-content] {
+    max-height: 150px !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+  
+  [data-radix-select-item] {
+    min-height: 48px !important;
+    padding: 14px 12px !important;
+    font-size: 15px !important;
   }
 }
