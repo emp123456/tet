@@ -14,7 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Church } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Send, Church, CheckCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 
@@ -73,6 +74,7 @@ const PastorForm = () => {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaReady, setCaptchaReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     // Detectar dispositivo móvel
@@ -210,19 +212,14 @@ const PastorForm = () => {
       // Sem redirecionamento para checkout externo
       if (result.ok) {
         console.log("Formulário enviado, mas sem URL de pagamento:", result);
-        toast({
-          title: "Formulário enviado com sucesso!",
-          description: "Entraremos em contato em breve para finalizar seu pedido.",
-        });
+        // Mostrar modal de sucesso em vez de toast
+        setShowSuccessModal(true);
         form.reset();
         return;
       }
 
-      toast({
-        title: "Formulário enviado com sucesso!",
-        description: "Entraremos em contato em breve.",
-      });
-
+      // Fallback para outros casos de sucesso
+      setShowSuccessModal(true);
       form.reset();
     } catch (error: any) {
       console.error("❌ ERRO - Erro ao enviar formulário:", error);
@@ -688,6 +685,31 @@ const PastorForm = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de Sucesso - Mobile First */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="sm:max-w-md mx-auto bg-card border-border">
+          <DialogHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <CheckCircle className="h-16 w-16 text-emerald-500" />
+            </div>
+            <DialogTitle className="text-xl font-bold text-unni-blue-light">
+              Formulário Enviado!
+            </DialogTitle>
+            <DialogDescription className="text-unni-text-secondary text-base">
+              Seu pedido foi enviado com sucesso. Entraremos em contato em breve para finalizar seu pedido.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center mt-6">
+            <Button 
+              onClick={() => setShowSuccessModal(false)}
+              className="bg-gradient-to-r from-unni-cyan to-unni-blue-light text-unni-navy font-semibold px-8 py-3 h-12 min-w-[120px]"
+            >
+              OK
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
