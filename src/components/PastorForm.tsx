@@ -77,16 +77,44 @@ const PastorForm = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
-    // Detectar dispositivo móvel
+    // Detectar dispositivo móvel e navegador
     const checkMobile = () => {
       const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
         window.innerWidth <= 768 ||
         ('ontouchstart' in window);
       setIsMobile(isMobileDevice);
+      
+      // Detectar navegadores problemáticos
+      const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+      const isIE = /MSIE|Trident/.test(navigator.userAgent);
+      
+      if (isSafari && isMobileDevice) {
+        // Safari iPhone - aplicar correções específicas
+        document.body.classList.add('safari-mobile');
+        console.log('🍎 Safari Mobile detectado - aplicando correções específicas');
+      }
+      
+      if (isIE) {
+        // Internet Explorer - aplicar correções específicas
+        document.body.classList.add('ie-mobile');
+        console.log('🌐 Internet Explorer detectado - aplicando correções específicas');
+      }
     };
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
+    
+    // Prevenir zoom em navegadores problemáticos
+    const preventZoom = (e: Event) => {
+      if (e.type === 'gesturestart' || e.type === 'gesturechange' || e.type === 'gestureend') {
+        e.preventDefault();
+      }
+    };
+    
+    // Adicionar listeners para prevenir zoom
+    document.addEventListener('gesturestart', preventZoom, { passive: false });
+    document.addEventListener('gesturechange', preventZoom, { passive: false });
+    document.addEventListener('gestureend', preventZoom, { passive: false });
     
     // Carregar hCaptcha
     const siteKey = import.meta.env.VITE_HCAPTCHA_SITEKEY as string | undefined;
@@ -99,6 +127,9 @@ const PastorForm = () => {
     
     return () => {
       window.removeEventListener('resize', checkMobile);
+      document.removeEventListener('gesturestart', preventZoom);
+      document.removeEventListener('gesturechange', preventZoom);
+      document.removeEventListener('gestureend', preventZoom);
       document.body.removeChild(script);
     };
   }, []);
@@ -499,7 +530,7 @@ const PastorForm = () => {
                         name="banco_numero"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-unni-text-primary">Banco - Numero</FormLabel>
+                            <FormLabel className="text-unni-text-primary">Banco - Número</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="Opcional"
