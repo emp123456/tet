@@ -387,3 +387,36 @@ input, select, textarea {
     margin-top: 1rem;
   }
 }
+
+/* Mobile-first: Success modal styling */
+[data-radix-dialog-content] {
+  /* Mobile-first: Full screen on small devices */
+  width: 95vw !important;
+  max-width: 400px !important;
+  margin: 1rem !important;
+  border-radius: 12px !important;
+  /* Ensure it's above everything */
+  z-index: 10000 !important;
+}
+
+/* Mobile-first: Modal backdrop */
+[data-radix-dialog-overlay] {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Mobile-first: Modal animations */
+[data-radix-dialog-content] {
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
