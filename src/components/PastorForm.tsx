@@ -402,10 +402,12 @@ const PastorForm = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent 
-                            className="bg-popover border-border"
-                            position={isMobile ? "item-aligned" : "popper"}
-                            sideOffset={isMobile ? 4 : 0}
+                            className="bg-popover border-border max-h-[200px] overflow-y-auto"
+                            position="popper"
+                            sideOffset={0}
                             align="start"
+                            avoidCollisions={true}
+                            collisionPadding={8}
                           >
                             {fieisOptions.map((option) => (
                               <SelectItem 
@@ -436,10 +438,12 @@ const PastorForm = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent 
-                            className="bg-popover border-border"
-                            position={isMobile ? "item-aligned" : "popper"}
-                            sideOffset={isMobile ? 4 : 0}
+                            className="bg-popover border-border max-h-[200px] overflow-y-auto"
+                            position="popper"
+                            sideOffset={0}
                             align="start"
+                            avoidCollisions={true}
+                            collisionPadding={8}
                           >
                             <SelectItem 
                               value="Modelo A - (Promoção) R$169,00/mês (30 conexões simultaneas)" 
