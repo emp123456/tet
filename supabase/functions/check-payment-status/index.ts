@@ -1,0 +1,112 @@
+// Função para verificar o status de um pagamento
+// @ts-ignore - Deno environment
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+type Payload = {
+  tracking_id: string;
+};
+
+function isValidPayload(body: unknown): body is Payload {
+  if (typeof body !== "object" || body === null) return false;
+  const b = body as Record<string, unknown>;
+  return typeof b.tracking_id === "string" && b.tracking_id.trim().length > 0;
+}
+
+export const handler = async (req: Request): Promise<Response> => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
+  if (req.method !== "POST") {
+    return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
+  }
+
+  try {
+    const contentType = req.headers.get("content-type") || "";
+    if (!contentType.toLowerCase().includes("application/json")) {
+      return new Response(JSON.stringify({ error: "unsupported_media_type" }), { status: 415, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    let bodyUnknown: unknown;
+    try {
+      bodyUnknown = await req.json();
+    } catch (e) {
+      console.error("parse_json_error", e);
+      return new Response(JSON.stringify({ error: "invalid_json" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    if (!isValidPayload(bodyUnknown)) {
+      return new Response(JSON.stringify({ error: "invalid_payload" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const body = bodyUnknown as Payload;
+
+    // Use secrets without the reserved SUPABASE_ prefix
+    // @ts-ignore - Deno environment
+    const supabaseUrl = Deno.env.get("SB_URL");
+    // @ts-ignore - Deno environment
+    const supabaseServiceKey = Deno.env.get("SB_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !supabaseServiceKey) {
+      return new Response(JSON.stringify({ error: "server_misconfigured" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Buscar o pagamento pelo tracking_id
+    const { data: payment, error } = await supabase
+      .from("igreja_cadastros")
+      .select("*")
+      .eq("tracking_id", body.tracking_id)
+      .single();
+
+    if (error) {
+      console.error("payment_not_found", error);
+      return new Response(JSON.stringify({ error: "payment_not_found" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Verificar se o pagamento não foi cancelado
+    if (payment.payment_status === "cancelled") {
+      return new Response(JSON.stringify({ error: "payment_cancelled" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Verificar se o pagamento está pendente ou pago
+    if (payment.payment_status !== "pending" && payment.payment_status !== "paid") {
+      return new Response(JSON.stringify({ error: "payment_invalid_status" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Calcular valor baseado no modelo
+    let valor = 169.00; // Modelo A
+    if (payment.modelo_desejado.includes("Modelo B")) {
+      valor = 338.00; // Modelo B
+    }
+
+    // Retornar dados do pagamento
+    return new Response(JSON.stringify({
+      ok: true,
+      payment: {
+        id: payment.id,
+        nome_pastor: payment.nome_pastor,
+        email: payment.email,
+        modelo_desejado: payment.modelo_desejado,
+        valor: valor,
+        tracking_id: payment.tracking_id,
+        payment_status: payment.payment_status,
+        created_at: payment.created_at
+      }
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  } catch (e) {
+    console.error("unhandled_error", e);
+    return new Response(JSON.stringify({ error: "bad_request" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  }
+};
+
+// Deno entrypoint
+// @ts-ignore - Deno environment
+Deno.serve(handler);
