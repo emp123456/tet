@@ -189,13 +189,17 @@ html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  /* Mobile-first: Prevent scroll issues */
-  max-height: 200px !important;
+  /* Mobile-first: Prevent scroll issues - SMALLER SIZE */
+  max-height: 150px !important;
   overflow-y: auto !important;
   position: fixed !important;
   z-index: 9999 !important;
   /* Prevent page scroll when dropdown is open */
   overscroll-behavior: contain;
+  /* Mobile-first: Better positioning */
+  transform-origin: top !important;
+  /* Prevent viewport changes */
+  contain: layout style paint;
 }
 
 [data-radix-select-item] {
@@ -272,7 +276,8 @@ input, select, textarea {
   /* Tablet: Better positioning */
   [data-radix-select-content] {
     position: relative !important;
-    max-height: 250px !important;
+    max-height: 200px !important;
+    contain: none;
   }
 }
 
@@ -346,14 +351,20 @@ input, select, textarea {
 /* Very small screens (320px-360px) */
 @media (max-width: 360px) {
   [data-radix-select-content] {
-    max-height: 150px !important;
+    max-height: 120px !important;
     max-width: calc(100vw - 16px) !important;
+    /* Ultra-compact for tiny screens */
+    position: fixed !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: 8px !important;
+    right: 8px !important;
   }
   
   [data-radix-select-item] {
-    min-height: 48px !important;
-    padding: 14px 12px !important;
-    font-size: 15px !important;
+    min-height: 44px !important;
+    padding: 12px 12px !important;
+    font-size: 14px !important;
   }
   
   /* Mobile-first: Smaller form spacing */
