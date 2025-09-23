@@ -459,6 +459,71 @@ input, select, textarea {
   }
 }
 
+/* Safari iPhone specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Safari-specific zoom prevention */
+  input, select, textarea {
+    font-size: 18px !important; /* Safari needs larger font */
+    -webkit-appearance: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: text;
+    /* Force hardware acceleration */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    /* Prevent zoom on focus */
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  /* Safari-specific viewport fixes */
+  body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    /* Prevent zoom gestures */
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Allow text selection in form fields for Safari */
+  input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
+/* Internet Explorer Mobile fixes */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  input, select, textarea {
+    font-size: 16px;
+    -ms-text-size-adjust: 100%;
+    /* IE Mobile specific */
+    -ms-touch-action: manipulation;
+  }
+  
+  body {
+    -ms-text-size-adjust: 100%;
+    -ms-touch-action: manipulation;
+  }
+}
+
+/* Browser-specific classes applied by JavaScript */
+.safari-mobile input,
+.safari-mobile select,
+.safari-mobile textarea {
+  font-size: 18px !important;
+  -webkit-text-size-adjust: 100% !important;
+  -webkit-appearance: none !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.ie-mobile input,
+.ie-mobile select,
+.ie-mobile textarea {
+  font-size: 16px !important;
+  -ms-text-size-adjust: 100% !important;
+  -ms-touch-action: manipulation !important;
+}
+
 /* Mobile-first: Success modal styling */
 [data-radix-dialog-content] {
   /* Mobile-first: Full screen on small devices */
