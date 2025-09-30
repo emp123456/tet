@@ -113,6 +113,27 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    /* Prevent zoom on mobile */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Prevent user zoom */
+    touch-action: manipulation;
+    /* Prevent double-tap zoom */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Allow text selection in form fields */
+  input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 }
 
@@ -174,3 +195,364 @@ html {
   100% { transform: translateY(0px); }
 }
 .animate-float { animation: floaty 6s ease-in-out infinite; }
+
+/* ===== MOBILE FIRST DESIGN ===== */
+/* Base styles are for mobile devices (320px+) */
+
+/* Mobile-first: Touch targets and interactions */
+[data-radix-select-content] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  /* Fallback for older browsers */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Mobile-first: Prevent scroll issues - SMALLER SIZE */
+  max-height: 150px !important;
+  overflow-y: auto !important;
+  position: fixed !important;
+  z-index: 9999 !important;
+  /* Prevent page scroll when dropdown is open */
+  overscroll-behavior: contain;
+  /* Mobile-first: Better positioning */
+  transform-origin: top !important;
+  /* Prevent viewport changes */
+  contain: layout style paint;
+}
+
+[data-radix-select-item] {
+  /* Mobile-first: Large touch targets */
+  min-height: 48px !important;
+  padding: 14px 16px !important;
+  font-size: 17px !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Fallback for older Android browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Ensure proper cursor */
+  cursor: pointer;
+}
+
+/* Mobile-first: Select trigger */
+[data-radix-select-trigger] {
+  min-height: 52px;
+  font-size: 17px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  /* Fallback for older browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Mobile-first: Prevent zoom on input focus */
+input, select, textarea {
+  font-size: 17px;
+  /* Prevent zoom on older iOS versions */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Prevent zoom on focus */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Prevent double-tap zoom */
+  touch-action: manipulation;
+  /* Prevent zoom on input focus */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Mobile-first: Better touch feedback */
+[data-radix-select-item]:active {
+  background-color: hsl(var(--muted) / 0.8) !important;
+  transform: scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* Mobile-first: Fallback for very old browsers */
+[data-radix-select-item]:hover {
+  background-color: hsl(var(--muted) / 0.6);
+}
+
+/* ===== TABLET AND UP (768px+) ===== */
+@media (min-width: 768px) {
+  /* Tablet: Slightly smaller touch targets */
+  [data-radix-select-item] {
+    min-height: 44px !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+  }
+  
+  [data-radix-select-trigger] {
+    min-height: 48px;
+    font-size: 16px;
+  }
+  
+  input, select, textarea {
+    font-size: 16px;
+  }
+  
+  /* Tablet: Better positioning */
+  [data-radix-select-content] {
+    position: relative !important;
+    max-height: 200px !important;
+    contain: none;
+  }
+}
+
+/* ===== DESKTOP AND UP (1024px+) ===== */
+@media (min-width: 1024px) {
+  /* Desktop: Standard desktop interactions */
+  [data-radix-select-item] {
+    min-height: 40px !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+  }
+  
+  [data-radix-select-trigger] {
+    min-height: 44px;
+    font-size: 14px;
+  }
+  
+  input, select, textarea {
+    font-size: 14px;
+  }
+  
+  /* Desktop: Hover effects */
+  [data-radix-select-item]:hover {
+    background-color: hsl(var(--muted) / 0.6);
+    transform: none;
+  }
+  
+  /* Desktop: Remove touch-specific styles */
+  [data-radix-select-item]:active {
+    transform: none;
+  }
+}
+
+/* Fallback for browsers that don't support CSS Grid/Flexbox */
+@supports not (display: flex) {
+  [data-radix-select-content] {
+    display: block;
+  }
+  
+  [data-radix-select-item] {
+    display: block;
+    width: 100%;
+  }
+}
+
+/* WebKit specific fixes for older versions */
+@supports (-webkit-appearance: none) {
+  [data-radix-select-trigger] {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 6px;
+  }
+  
+  [data-radix-select-item] {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+/* Global fix for select positioning */
+[data-radix-select-content] {
+  /* Ensure proper positioning */
+  transform-origin: var(--radix-select-content-transform-origin);
+  /* Prevent unwanted scrolling */
+  overscroll-behavior: contain;
+  /* Better positioning for mobile */
+  will-change: transform;
+}
+
+/* Mobile-first: Additional optimizations */
+/* Very small screens (320px-360px) */
+@media (max-width: 360px) {
+  [data-radix-select-content] {
+    max-height: 120px !important;
+    max-width: calc(100vw - 16px) !important;
+    /* Ultra-compact for tiny screens */
+    position: fixed !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: 8px !important;
+    right: 8px !important;
+  }
+  
+  [data-radix-select-item] {
+    min-height: 44px !important;
+    padding: 12px 12px !important;
+    font-size: 14px !important;
+  }
+  
+  /* Mobile-first: Smaller form spacing */
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* Mobile-first: Compact form fields */
+  input, textarea {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+}
+
+/* Mobile-first: Touch-friendly improvements */
+@media (pointer: coarse) {
+  /* Touch devices get larger touch targets */
+  button, [role="button"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  /* Larger form elements for touch */
+  input, select, textarea {
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+  
+  /* Better spacing for touch */
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+}
+
+/* Mobile-first: Prevent zoom completely */
+@media (max-width: 768px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Prevent zoom */
+    touch-action: manipulation;
+  }
+  
+  body {
+    /* Prevent zoom on body */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    touch-action: manipulation;
+    /* Prevent double-tap zoom */
+    -webkit-touch-callout: none;
+  }
+  
+  /* Prevent zoom on all interactive elements */
+  button, input, select, textarea, [role="button"] {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    /* Prevent zoom on focus */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
+
+/* Safari iPhone specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Safari-specific zoom prevention */
+  input, select, textarea {
+    font-size: 18px !important; /* Safari needs larger font */
+    -webkit-appearance: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: text;
+    /* Force hardware acceleration */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    /* Prevent zoom on focus */
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  /* Safari-specific viewport fixes */
+  body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    /* Prevent zoom gestures */
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Allow text selection in form fields for Safari */
+  input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
+/* Internet Explorer Mobile fixes */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  input, select, textarea {
+    font-size: 16px;
+    -ms-text-size-adjust: 100%;
+    /* IE Mobile specific */
+    -ms-touch-action: manipulation;
+  }
+  
+  body {
+    -ms-text-size-adjust: 100%;
+    -ms-touch-action: manipulation;
+  }
+}
+
+/* Browser-specific classes applied by JavaScript */
+.safari-mobile input,
+.safari-mobile select,
+.safari-mobile textarea {
+  font-size: 18px !important;
+  -webkit-text-size-adjust: 100% !important;
+  -webkit-appearance: none !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.ie-mobile input,
+.ie-mobile select,
+.ie-mobile textarea {
+  font-size: 16px !important;
+  -ms-text-size-adjust: 100% !important;
+  -ms-touch-action: manipulation !important;
+}
+
+/* Mobile-first: Success modal styling */
+[data-radix-dialog-content] {
+  /* Mobile-first: Full screen on small devices */
+  width: 95vw !important;
+  max-width: 400px !important;
+  margin: 1rem !important;
+  border-radius: 12px !important;
+  /* Ensure it's above everything */
+  z-index: 10000 !important;
+}
+
+/* Mobile-first: Modal backdrop */
+[data-radix-dialog-overlay] {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Mobile-first: Modal animations */
+[data-radix-dialog-content] {
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
