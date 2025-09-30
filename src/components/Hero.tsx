@@ -28,7 +28,7 @@ const Hero = () => {
             </h1>
 
             <p className="mt-4 text-lg text-unni-text-secondary max-w-xl md:max-w-none">
-              Faça parte da rede de comunicação Wi-Fi Quadrangular.
+              Faça parte da rede de comunicação Wi-Fi.
             </p>
 
             <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
