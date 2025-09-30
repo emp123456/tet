@@ -14,6 +14,7 @@ const corsHeaders = {
 
 type Payload = {
   nome_pastor: string;
+  igreja: string;
   telefone: string;
   email: string;
   endereco: string;
@@ -21,11 +22,11 @@ type Payload = {
   cnpj: string;
   numero_fieis: string;
   modelo_desejado: string;
-  banco: string;
-  banco_numero: string;
-  agencia: string;
-  conta: string;
-  correntista_nome: string;
+  banco?: string;
+  banco_numero?: string;
+  agencia?: string;
+  conta?: string;
+  correntista_nome?: string;
 };
 
 function isValidPayload(body: unknown): body is Payload {
@@ -33,6 +34,7 @@ function isValidPayload(body: unknown): body is Payload {
   const b = body as Record<string, unknown>;
   const required = [
     "nome_pastor",
+    "igreja",
     "telefone",
     "email",
     "endereco",
@@ -40,11 +42,6 @@ function isValidPayload(body: unknown): body is Payload {
     "cnpj",
     "numero_fieis",
     "modelo_desejado",
-    "banco",
-    "banco_numero",
-    "agencia",
-    "conta",
-    "correntista_nome",
   ];
   for (const key of required) {
     if (typeof b[key] !== "string" || (b[key] as string).trim().length === 0) {
@@ -109,36 +106,53 @@ export const handler = async (req: Request): Promise<Response> => {
 
     // Use secrets without the reserved SUPABASE_ prefix
     // @ts-ignore - Deno environment
-    const supabaseUrl = Deno.env.get("SB_URL");
+    const supabaseUrl = Deno.env.get("SB_URL") || Deno.env.get("SUPABASE_URL");
     // @ts-ignore - Deno environment
-    const supabaseServiceKey = Deno.env.get("SB_SERVICE_ROLE_KEY");
+    const supabaseServiceKey = Deno.env.get("SB_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    
+    
     if (!supabaseUrl || !supabaseServiceKey) {
-      return new Response(JSON.stringify({ error: "server_misconfigured" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      console.error("❌ ERRO - Variáveis do Supabase não configuradas");
+      return new Response(JSON.stringify({ 
+        error: "server_misconfigured",
+        details: "Variáveis de ambiente do Supabase não configuradas"
+      }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { error } = await supabase.from("igreja_cadastros").insert([
-      {
-        nome_pastor: body.nome_pastor,
-        telefone: body.telefone,
-        email: body.email,
-        endereco: body.endereco,
-        cep: body.cep,
-        cnpj: body.cnpj,
-        numero_fieis: body.numero_fieis,
-        modelo_desejado: body.modelo_desejado,
-        banco: body.banco,
-        banco_numero: body.banco_numero,
-        agencia: body.agencia,
-        conta: body.conta,
-        correntista_nome: body.correntista_nome
-      }
-    ]);
+
+    const insertData = {
+      nome_pastor: body.nome_pastor.trim(),
+      igreja: body.igreja ? body.igreja.trim() : '',
+      telefone: body.telefone.trim(),
+      email: body.email.trim().toLowerCase(),
+      endereco: body.endereco.trim(),
+      cep: body.cep.replace(/\D/g, ''), // Remove caracteres não numéricos
+      cnpj: body.cnpj.replace(/\D/g, ''), // Remove caracteres não numéricos
+      numero_fieis: body.numero_fieis.trim(),
+      modelo_desejado: body.modelo_desejado.trim(),
+      banco: body.banco?.trim() || null,
+      banco_numero: body.banco_numero?.trim() || null,
+      agencia: body.agencia?.trim() || null,
+      conta: body.conta?.trim() || null,
+      correntista_nome: body.correntista_nome?.trim() || null
+    };
+
+
+    const { data, error } = await supabase
+      .from("igreja_cadastros")
+      .insert([insertData])
+      .select();
+
 
     if (error) {
       console.error("insert_failed", error);
-      return new Response(JSON.stringify({ error: "insert_failed" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ 
+        error: "insert_failed", 
+        details: error.message,
+        code: error.code 
+      }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     // Retorno sem integração de pagamento online
