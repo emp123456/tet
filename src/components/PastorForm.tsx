@@ -188,8 +188,6 @@ const PastorForm = () => {
     setIsSubmitting(true);
     try {
       const submitUrl = "https://igjmwawkepypqdyoljgl.supabase.co/functions/v1/submit-form";
-      console.log("🔍 DEBUG - URL de envio:", submitUrl);
-      console.log("🔍 DEBUG - Dados do formulário:", data);
       
       if (!submitUrl) {
         console.error("❌ ERRO - VITE_FORM_SUBMIT_URL não configurada");
@@ -198,9 +196,6 @@ const PastorForm = () => {
 
       // Get captcha just-in-time
       const token = await requestCaptchaToken();
-      console.log("🔍 DEBUG - Token captcha:", token);
-
-      console.log("🔍 DEBUG - Enviando requisição para:", submitUrl);
       const response = await fetch(submitUrl, {
         method: "POST",
         headers: {
@@ -210,8 +205,6 @@ const PastorForm = () => {
         body: JSON.stringify({ ...data, captchaToken: token ?? captchaToken }),
       });
 
-      console.log("🔍 DEBUG - Status da resposta:", response.status);
-      console.log("🔍 DEBUG - Headers da resposta:", Object.fromEntries(response.headers.entries()));
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -222,7 +215,6 @@ const PastorForm = () => {
       }
 
       const result = await response.json();
-      console.log("🔍 DEBUG - Resultado da resposta:", result);
       
       // Salvar dados básicos do pedido para eventual consulta
       if (result.ok) {
@@ -239,12 +231,10 @@ const PastorForm = () => {
           created_at: new Date().toISOString()
         };
         localStorage.setItem("pendingPayment", JSON.stringify(paymentData));
-        console.log("🔍 DEBUG - Dados salvos no localStorage:", paymentData);
       }
       
       // Sem redirecionamento para checkout externo
       if (result.ok) {
-        console.log("Formulário enviado, mas sem URL de pagamento:", result);
         // Mostrar modal de sucesso em vez de toast
         setShowSuccessModal(true);
         form.reset();
