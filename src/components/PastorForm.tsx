@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 
 const pastorFormSchema = z.object({
   nome_pastor: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  igreja: z.string().min(2, "Nome da igreja deve ter pelo menos 2 caracteres"),
   telefone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
   email: z.string().email("Email inválido"),
   endereco: z.string().min(5, "Endereço deve ter pelo menos 5 caracteres"),
@@ -55,6 +56,7 @@ const PastorForm = () => {
     resolver: zodResolver(pastorFormSchema),
     defaultValues: {
       nome_pastor: "",
+      igreja: "",
       telefone: "",
       email: "",
       endereco: "",
@@ -328,6 +330,24 @@ const PastorForm = () => {
 
                   <FormField
                     control={form.control}
+                    name="igreja"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-unni-text-primary">Nome da Igreja*</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Digite o nome da igreja"
+                            className="bg-muted/50 border-border focus:border-unni-cyan text-foreground"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
                     name="telefone"
                     render={({ field }) => (
                       <FormItem>
@@ -515,7 +535,7 @@ const PastorForm = () => {
                             <FormLabel className="text-unni-text-primary">Banco</FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Opcional"
+                                placeholder="Nome do banco (ex: Itaú, Bradesco)"
                                 className="bg-muted/50 border-border focus:border-unni-cyan text-foreground"
                                 {...field}
                               />
@@ -533,7 +553,7 @@ const PastorForm = () => {
                             <FormLabel className="text-unni-text-primary">Banco - Número</FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Opcional"
+                                placeholder="Código do banco (ex: 341)"
                                 className="bg-muted/50 border-border focus:border-unni-cyan text-foreground"
                                 {...field}
                               />
@@ -551,7 +571,7 @@ const PastorForm = () => {
                             <FormLabel className="text-unni-text-primary">Agência</FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Opcional"
+                                placeholder="Agência (somente números)"
                                 className="bg-muted/50 border-border focus:border-unni-cyan text-foreground"
                                 {...field}
                               />
@@ -569,7 +589,7 @@ const PastorForm = () => {
                             <FormLabel className="text-unni-text-primary">Conta</FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Opcional"
+                                placeholder="Conta (com dígito, se houver)"
                                 className="bg-muted/50 border-border focus:border-unni-cyan text-foreground"
                                 {...field}
                               />
@@ -587,7 +607,7 @@ const PastorForm = () => {
                             <FormLabel className="text-unni-text-primary">Correntista - Nome</FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Opcional"
+                                placeholder="Nome completo do correntista"
                                 className="bg-muted/50 border-border focus:border-unni-cyan text-foreground"
                                 {...field}
                               />
